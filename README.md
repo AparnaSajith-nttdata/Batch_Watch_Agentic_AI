@@ -1,85 +1,123 @@
-# Batch_Watch_Agentic_AI
+# 🤖 BatchWatch Agent (Proof of Concept)
 
-Project Utilizes poetry dependency manager which is pretty easy to setup.
+BatchWatch is an **agentic AI job analysis bot** that autonomously monitors batch job logs and audit tables. Using predictive analytics, it identifies potential long-running or failing jobs before they breach SLAs. This proof-of-concept integrates **Streamlit**, **LangChain**, **FAISS memory**, and **Ollama LLM** for AI-assisted remediation recommendations.
 
-## Instructions on Poetry Setup
-To setup poetry if wanted to better manage dependencies & run the following commands in a bash terminal in codespaces
+---
+
+## 🧩 Features
+
+- Load Autosys CSV job logs (`AUTOSYS_CSV` environment variable)
+- Detect **long-running jobs** compared to historical averages
+- Aggregate **job failures** (daily, weekly, monthly)
+- AI-powered **remediation insights** using Ollama LLM
+- FAISS vector store memory for contextual recall
+- Streamlit interface for **interactive monitoring**
+
+---
+
+## ⚡ Quick Start
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/<your-username>/batch-watch-agent.git
+cd batch-watch-agent
+
+## 2. Install Dependencies
+
+Install all required Python packages:
 
 ```bash
-pip install pipx
-pipx ensurepath
-pipx install poetry
-poetry install
-```
+pip install -r requirements.txt
 
-There it should be easy to manage and add the needed dependencies for it.
-Keep in mind, don't make major changes to the poetry.lock because it is sensitive.
+## 3. Pull Ollama Models
 
-**Please do not mess with the file pyproject.toml.**
-
-**It is a difficult file to work with and can be cumbersome to work with all together**
-
-## Instructions on Running
-
-To run any python file or streamlit interface, please use the following commands in the codespaces bash terminal:
+Ensure the Ollama models are available locally:
 
 ```bash
-poetry run python main.py
-poetry run streamlit main.py
-```
+ollama pull mxbai-embed-large
+ollama pull gemma3:1b
+## 4. Set CSV Path
+Create a .env file in the root of the project:
 
-For any other poetry related issues, refer back to the following documentation.
-
-https://python-poetry.org/
-
-## Environment variables for local development
-
-This POC supports a small set of environment variables for optional integrations (LLM, data path). To get started:
-
-1. Copy `.env.example` to `.env` and fill in values you need (do not commit `.env`).
+env
+Copy code
+AUTOSYS_CSV=/full/path/to/autosys.csv
+Or export the environment variable:
 
 ```bash
-cp .env.example .env
-# edit .env and add your GEMINI_API_KEY and GEMINI_API_URL if you want LLM analysis
-```
+Copy code
+export AUTOSYS_CSV=/full/path/to/autosys.csv
 
-The Streamlit app reads the following variables:
-- GEMINI_API_KEY: API key for the Gemini/LLM provider used by the POC.
-- GEMINI_API_URL: Base URL for the Gemini API endpoint (POC uses a simple JSON POST).
-- AUTOSYS_CSV: Path to the generated autosys CSV file (defaults to `autosys_logs.csv`).
+##5. Run the Streamlit App
+```bash
+Copy code
+streamlit run batch_watch_app.py
 
-Security note: Never commit real API keys to source control. Use secrets management for production.
-# Batch_Watch_Agentic_AI
+##📊 Streamlit UI
+The app is organized into four tabs:
 
-Project Utilizes poetry dependency manager which is pretty easy to setup. 
+Job Overview – View raw Autosys job data
 
-# Instructions on Poetry Setup 
-To setup poetry if wanted to better manage dependencies & run the following commands in a bash terminal in codespaces
+Long Runners – Detect jobs with unusually long runtimes
 
-**pip install pipx**
+Failures – Aggregate failed jobs by day, week, and month
 
-**pipx ensurepath**
+AI Agent – Ask BatchWatch questions about job performance, SLA, and failures. The AI shows the data segments it focuses on and gives recommendations.
 
-**pipx install poetry**
+##🧠 AI & Memory
+Uses Ollama LLM (gemma3:1b) for natural language analysis
 
-**poetry install**
+FAISS vector store stores key job info for contextual recall
 
-There it should be easy to manage and add the needed dependencies for it. 
-Keep in mind, don't make major changes to the poetry.lock because it is sensitive. 
+Retrieval highlights which parts of the data the AI is focusing on
 
-**Please do not mess with the file pyproject.toml.**
+Uses RunnableWithMessageHistory to track conversation history in st.session_state
 
-**It is a difficult file to work with and can be cumbersome to work with all together**
+##🔧 Configuration
+AUTOSYS_CSV – Path to Autosys CSV file with at least these columns:
 
-# Instructions on Running 
+job_name
 
-To run any python file or streamlit interface, please use the following commands in the codespaces bash terminal:
+start_time
 
-**poetry run python main.py**
+end_time
 
-**poetry run streamlit main.py**
+status
 
+LLM & embeddings can be swapped in code:
 
-For any other poetry related issues, refer back to the following documentation.
+```python
+Copy code
+llm = ChatOllama(model="gemma3:1b")
+embeddings = OllamaEmbeddings(model="mxbai-embed-large")
 
-https://python-poetry.org/
+##📝 Notes
+This is a POC, not production-ready
+
+FAISS memory is in-memory; persistence after app restart is not implemented yet
+
+Ensure the CSV has correct datetime formats for start_time and end_time
+
+##🚀 Future Enhancements
+Persist FAISS memory between sessions
+
+Add alerting via Slack/email/webhook for SLA breaches
+
+Add visual charts for job runtimes and failure trends
+
+Integrate multiple schedulers (not just Autosys)
+
+Structured LLM reasoning trace for transparency
+
+##🛠 Tech Stack
+Python
+
+Streamlit for UI
+
+Pandas / NumPy for data processing
+
+LangChain for AI orchestration
+
+Ollama LLM for natural language analysis
+
+FAISS for vector memory
