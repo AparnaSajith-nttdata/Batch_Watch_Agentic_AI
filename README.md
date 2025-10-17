@@ -22,14 +22,14 @@ BatchWatch is an **agentic AI job analysis bot** that autonomously monitors batc
 git clone https://github.com/<your-username>/batch-watch-agent.git
 cd batch-watch-agent
 
-## 2. Install Dependencies
+### 2. Install Dependencies
 
 Install all required Python packages:
 
 ```bash
 pip install -r requirements.txt
 
-## 3. Pull Ollama Models
+### 3. Pull Ollama Models
 
 Ensure the Ollama models are available locally:
 
@@ -48,12 +48,12 @@ Or export the environment variable:
 Copy code
 export AUTOSYS_CSV=/full/path/to/autosys.csv
 
-##5. Run the Streamlit App
+### 5. Run the Streamlit App
 ```bash
 Copy code
 streamlit run batch_watch_app.py
 
-##📊 Streamlit UI
+### 📊 Streamlit UI
 The app is organized into four tabs:
 
 Job Overview – View raw Autosys job data
@@ -64,7 +64,7 @@ Failures – Aggregate failed jobs by day, week, and month
 
 AI Agent – Ask BatchWatch questions about job performance, SLA, and failures. The AI shows the data segments it focuses on and gives recommendations.
 
-##🧠 AI & Memory
+### 🧠 AI & Memory
 Uses Ollama LLM (gemma3:1b) for natural language analysis
 
 FAISS vector store stores key job info for contextual recall
@@ -73,7 +73,7 @@ Retrieval highlights which parts of the data the AI is focusing on
 
 Uses RunnableWithMessageHistory to track conversation history in st.session_state
 
-##🔧 Configuration
+### 🔧 Configuration
 AUTOSYS_CSV – Path to Autosys CSV file with at least these columns:
 
 job_name
@@ -91,14 +91,14 @@ Copy code
 llm = ChatOllama(model="gemma3:1b")
 embeddings = OllamaEmbeddings(model="mxbai-embed-large")
 
-##📝 Notes
+### 📝 Notes
 This is a POC, not production-ready
 
 FAISS memory is in-memory; persistence after app restart is not implemented yet
 
 Ensure the CSV has correct datetime formats for start_time and end_time
 
-##🚀 Future Enhancements
+### 🚀 Future Enhancements
 Persist FAISS memory between sessions
 
 Add alerting via Slack/email/webhook for SLA breaches
@@ -109,7 +109,7 @@ Integrate multiple schedulers (not just Autosys)
 
 Structured LLM reasoning trace for transparency
 
-##🛠 Tech Stack
+### 🛠 Tech Stack
 Python
 
 Streamlit for UI
